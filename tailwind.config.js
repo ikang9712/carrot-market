@@ -13,5 +13,8 @@ module.exports = {
       },
     },
   },
+  // media: follow the browser's configuration for darkmode
+  // class: does not follow.
+  darkMode: "media",
   plugins: [],
 }
