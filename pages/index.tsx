@@ -7,8 +7,7 @@ import Head from "next/head";
 
 
 const Home: NextPage = () => {
-  const user = useUser();
-  console.log(user);
+  const {user, isLoading} = useUser();
   return (
     <Layout title="Home" hasTabBar>
       <Head><title>Home</title></Head>
