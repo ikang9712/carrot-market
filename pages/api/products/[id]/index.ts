@@ -8,7 +8,10 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-    const {id} = req.query;
+    const {
+        query: {id},
+        session: {user}
+    } = req
     
     if (!id){
         res.json({
@@ -45,10 +48,18 @@ async function handler(
         }
 
     })
+
+    const isLiked = await client.favorite.findFirst({
+        where: {
+            productId: product?.id,
+            userId: user?.id,
+        }
+    })
     
     res.json({
         ok:true,
         product,
+        isLiked,
         relatedProducts
     })
 }

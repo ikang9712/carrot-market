@@ -20,6 +20,7 @@ model User {
   avatar String? 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  favorites Favorite[]
   tokens Token[]
   products Product[]
 }
@@ -40,7 +41,18 @@ model Product {
   image String
   name String 
   price Int
+  favorites Favorite[]
   description String @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Favorite {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId Int
+  productId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
