@@ -2,11 +2,12 @@ import type { NextPage } from "next";
 import Button from "../../components/button";
 import Layout from "../../components/layout";
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import Link from 'next/link';
 import { Product, User } from "@prisma/client";
 import useMutation from '../../libs/client/useMutation';
 import { cls } from '../../libs/client/utils';
+import useUser from '../../libs/client/useUser';
 
 interface ProductWithUser extends Product {
   user: User
@@ -20,16 +21,22 @@ interface ItemDetailResponse {
 }
 
 const ItemDetail: NextPage = () => {
+  const {user, isLoading } = useUser();
   const router = useRouter();
-  const {data, mutate} = useSWR<ItemDetailResponse>(router.query.id ? `/api/products/${router.query.id}` : null)
+  const {mutate} = useSWRConfig();
+  const {data, mutate:boundMutate} = useSWR<ItemDetailResponse>(router.query.id ? `/api/products/${router.query.id}` : null)
   const [toggleFav, {loading}] = useMutation(`/api/products/${router.query.id}/fav`)
   const onFavoriteClick = () => {
     toggleFav({})
+    if (!data) return;
     // mutate({},true)
     // first argument any data (will replace the whole)
     // second argument (bool) to revalidate the data. retrigger API and fetch newest
-    if (!data) return;
-    mutate({...data, isLiked: !data.isLiked}, false)
+    // mutate("/api/users/me") will refetch without modification.
+    
+    // boundMutate(prev => prev && ({ ...prev, isLiked: !prev.isLiked}), false)
+    boundMutate({...data, isLiked: !data.isLiked}, false)
+
   }
   return (
     <Layout canGoBack>
