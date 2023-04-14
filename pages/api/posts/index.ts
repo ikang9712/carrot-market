@@ -1,4 +1,3 @@
-
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@/libs/server/withHandler";
 import client from "@/libs/server/client";
@@ -9,18 +8,27 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  const profile = await client.user.findUnique({
-      where: {
-          id: req.session.user?.id
-      }
-  })
-  res.json({
-      ok:true,
-      profile
-  })
+    const {
+        body: {question}, 
+        session: {user}
+    } = req
+    const post = await client.post.create({
+        data: {
+            question,
+            user: {
+                connect: {
+                    id: user?.id,
+                }
+            }
+        }
+    })
+    res.json({
+        ok:true,
+        post
+    })
 }
 
 export default withApiSession(withHandler({
-  methods: ["GET"],
+  methods: ["POST"],
   handler,
 }));
