@@ -69,6 +69,8 @@ model Post {
   updatedAt DateTime @updatedAt
   answers Answer[]
   wonderings Wondering[]
+  latitude Float?
+  longitude Float?
 }
 
 model Answer {
@@ -86,7 +88,7 @@ model Wondering {
     id Int @id @default(autoincrement())
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
-    answer String @db.MediumText
+    answer String? @db.MediumText
     post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId Int
     createdAt DateTime @default(now())
