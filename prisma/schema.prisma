@@ -86,7 +86,7 @@ model Wondering {
     id Int @id @default(autoincrement())
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId Int
-    answer String @db.MediumText
+    answer String? @db.MediumText
     post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId Int
     createdAt DateTime @default(now())
