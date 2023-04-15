@@ -69,6 +69,8 @@ model Post {
   updatedAt DateTime @updatedAt
   answers Answer[]
   wonderings Wondering[]
+  latitude Float?
+  longitude Float?
 }
 
 model Answer {
