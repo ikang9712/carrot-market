@@ -1,29 +1,33 @@
-import { Stream } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
-import FloatingButton from "../../components/floating-button";
-import Layout from "../../components/layout";
-import useSWR from 'swr';
+import FloatingButton from "@/components/floating-button";
+import Layout from "@/components/layout";
+import { Stream } from "@prisma/client";
+import useSWR from "swr";
+import Image from "next/image";
 
 interface StreamsResponse {
   ok: boolean;
-  streams: Stream[]
+  streams: Stream[];
 }
 
-const Live: NextPage = () => {
-  const {data} = useSWR<StreamsResponse>(`/api/streams`)
-  console.log(data)
+const Streams: NextPage = () => {
+  const { data } = useSWR<StreamsResponse>(`/api/streams?page=3`);
   return (
-    <Layout hasTabBar title="Live">
+    <Layout hasTabBar title="라이브">
       <div className=" divide-y-[1px] space-y-4">
         {data?.streams.map((stream) => (
-          <Link key={stream.id} href={`/streams/${stream.id}`} className="pt-4 block  px-4">
-
-              <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
+          <Link key={stream.id} href={`/streams/${stream.id}`}className="pt-4 block  px-4">
+              <div className="w-full relative overflow-hidden rounded-md shadow-sm bg-slate-300 aspect-video">
+                <Image
+                  layout="fill"
+                  alt=""
+                  src={`https://videodelivery.net/${stream.cloudflareId}/thumbnails/thumbnail.jpg?height=320`}
+                />
+              </div>
               <h1 className="text-2xl mt-2 font-bold text-gray-900">
                 {stream.name}
               </h1>
-
           </Link>
         ))}
         <FloatingButton href="/streams/create">
@@ -47,4 +51,4 @@ const Live: NextPage = () => {
   );
 };
 
-export default Live;
+export default Streams;
