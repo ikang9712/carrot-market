@@ -6,6 +6,7 @@ interface ItemProps {
   price: number;
   comments: number;
   hearts: number;
+  imageId: string;
 }
 
 export default function Item({
@@ -13,13 +14,18 @@ export default function Item({
   price,
   comments,
   hearts,
+  imageId,
   id,
 }: ItemProps) {
   return (
     <Link href={`/products/${id}`} className="flex px-4 pt-5 cursor-pointer justify-between">
       
         <div className="flex space-x-4">
-          <div className="w-20 h-20 bg-gray-400 rounded-md" />
+          {imageId ? 
+          <img 
+          src={`https://imagedelivery.net/c4VdxCUMvR6vZ0u_H6JJsw/${imageId}/preview`}/>
+          :
+            <div className="w-20 h-20 bg-gray-400 rounded-md" />}
           <div className="pt-2 flex flex-col">
             <h3 className="text-sm font-medium text-gray-900">{title}</h3>
             <span className="font-medium mt-1 text-gray-900">${price}</span>

@@ -6,6 +6,7 @@ import useUser from "@/libs/client/useUser";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import useMutation from "@/libs/client/useMutation";
+import { useRouter } from 'next/router';
 
 interface EditProfileForm {
   email?: string;
@@ -22,6 +23,7 @@ interface EditProfileResponse {
 
 const EditProfile: NextPage = () => {
   const { user } = useUser();
+  const router = useRouter();
   const {
     register,
     setValue,
@@ -34,8 +36,9 @@ const EditProfile: NextPage = () => {
     if (user?.name) setValue("name", user.name);
     if (user?.email) setValue("email", user.email);
     if (user?.phone) setValue("phone", user.phone);
-    if (user?.avatar) setAvatarPreview(`https://imagedelivery.net/c4VdxCUMvR6vZ0u_H6JJsw/${user?.avatar}/public`);
+    if (user?.avatar) setAvatarPreview(`https://imagedelivery.net/c4VdxCUMvR6vZ0u_H6JJsw/${user?.avatar}/avatar`);
   }, [user, setValue]);
+
   const [editProfile, { data, loading }] =
     useMutation<EditProfileResponse>(`/api/users/me`);
   const onValid = async({ email, phone, name, avatar }: EditProfileForm) => {
@@ -78,7 +81,11 @@ const EditProfile: NextPage = () => {
     if (data && !data.ok && data.error) {
       setError("formErrors", { message: data.error });
     }
-  }, [data, setError]);
+    if (data && data.ok){
+      router.replace(`/profile`)
+    }
+  }, [data, setError, router]);
+  
 
   const [avatarPreview, setAvatarPreview] = useState("");
   const avatar = watch("avatar");
