@@ -29,7 +29,8 @@ async function handler(
             body: {
                 name,
                 price,
-                description
+                description,
+                photoId
             },
             session: {
                 user
@@ -40,7 +41,7 @@ async function handler(
                 name,
                 price: +price,
                 description,
-                image: "",
+                image: photoId,
                 user: {
                     connect: {
                         id: user?.id
